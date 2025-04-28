@@ -293,7 +293,7 @@ def admin():
     return render_template_string('''
     <html>
     <head>
-        <title>관리자 페이지</title>
+        <title>2호점 관리자 페이지</title>
         <style>
             body {
                 font-family: 'Noto Sans', sans-serif;
@@ -446,18 +446,6 @@ def admin():
 	</div>
         <h2>주문 관리</h2>
         <div class="layout">
-            <div class="column">
-                {% for seat_number in range(9, 13) %}
-                    <div class="seat {% if orders.get(seat_number|string) %}occupied{% endif %}">
-                        {{ seat_number }}번
-                        {% for order in orders.get(seat_number|string, []) %}
-                            <div>{{ order.salt }}</div>
-                            <div>{{ order.drink }}</div>
-                            <button class="delete-btn" onclick="deleteOrder('{{ order.id }}')">삭제</button>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
             <div class="seat-container">
                 <div class="row">
                     {% for seat_number in range(1, 9) %}
