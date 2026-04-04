@@ -16,7 +16,6 @@ def create_tables():
         CREATE TABLE IF NOT EXISTS orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             seat TEXT NOT NULL,
-            salt TEXT NOT NULL,
             drink TEXT NOT NULL,
             status TEXT NOT NULL DEFAULT '대기 중'
         )
@@ -37,9 +36,9 @@ def order():
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO orders (seat, salt, drink) 
-            VALUES (?, ?, ?)
-        """, (seat_number, data.get("saltType"), data.get("drink")))
+            INSERT INTO orders (seat, drink) 
+            VALUES (?, ?)
+        """, (seat_number, data.get("drink")))
         conn.commit()
         conn.close()
         return redirect(url_for("order_complete", seat=seat_number))  # 주문 완료 후 리디렉트
@@ -120,12 +119,11 @@ def order():
         </style>
         <script>
             function placeOrder() {
-                let salt = document.getElementById('salt').value;
                 let drink = document.getElementById('drink').value;
                 fetch(window.location.href, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ saltType: salt, drink: drink })
+                    body: JSON.stringify({ drink: drink })
                 }).then(() => {
                     window.location.href = "/order-complete?seat=" + {{ seat_number }};
                 });
@@ -143,12 +141,7 @@ def order():
 	</div>
         <div class="container">
            <h2>자리 {{ seat_number }}번 (Seat No. {{ seat_number }}) (座位 {{ seat_number }})</h2>
-           <label>족욕 소금 선택 (Foot Bath Salt) (足浴盐选择):</label>
-            <select id="salt">
-                <option value="라벤더">라벤더 (Lavender / 薰衣草)</option>
-                <option value="스피아민트">스피아민트 (Spearmint / 留兰香)</option>
-                <option value="히말라야">히말라야 (Himalayan / 喜马拉雅)</option>
-            </select><br/>
+
             <label>음료 선택 (Drink Selection) (饮料选择):</label>
             <select id="drink">
     <option value="아메리카노(HOT)">아메리카노(Americano)(HOT) / 美式咖啡 (热)</option>
@@ -285,10 +278,10 @@ def admin():
 
     orders = {}
     for order in orders_raw:
-        order_id, seat, salt, drink, status = order
+        order_id, seat, drink, status = order
         if seat not in orders:
             orders[seat] = []
-        orders[seat].append({"id": order_id, "salt": salt, "drink": drink, "status": status})
+        orders[seat].append({"id": order_id, "drink": drink, "status": status})
 
     return render_template_string('''
     <html>
@@ -452,7 +445,6 @@ def admin():
                         <div class="seat {% if orders.get(seat_number|string) %}occupied{% endif %}">
                             {{ seat_number }}번
                             {% for order in orders.get(seat_number|string, []) %}
-                                <div>{{ order.salt }}</div>
                                 <div>{{ order.drink }}</div>
                                 <button class="delete-btn" onclick="deleteOrder('{{ order.id }}')">삭제</button>
                             {% endfor %}
