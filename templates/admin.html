@@ -7,6 +7,7 @@
                 text-align: center;
                 background: linear-gradient(to bottom, #3b8ed6, #dff6ff);
                 color: white;
+                padding-top: 140px; /* 로고와 겹치지 않도록 여백 추가 */
             }
             .layout {
                 display: flex;
@@ -211,18 +212,7 @@
             <!-- 1층 -->
             <div id="floor1" class="floor-container active">
                 <div class="row">
-                    {% for seat_number in range(1, 5) %}
-                        <div class="seat {% if orders.get(seat_number|string) %}occupied{% endif %}">
-                            {{ seat_number }}번
-                            {% for order in orders.get(seat_number|string, []) %}
-                                <div>{{ order.drink }}</div>
-                                <button class="delete-btn" onclick="deleteOrder('{{ order.id }}')">삭제</button>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="row">
-                    {% for seat_number in range(5, 9) %}
+                    {% for seat_number in range(1, 9) %}
                         <div class="seat {% if orders.get(seat_number|string) %}occupied{% endif %}">
                             {{ seat_number }}번
                             {% for order in orders.get(seat_number|string, []) %}
@@ -237,7 +227,7 @@
             <!-- 2층 -->
             <div id="floor2" class="floor-container">
                 <div class="row">
-                    {% for seat_number in range(1, 5) %}
+                    {% for seat_number in range(1, 7) %}
                         {% set seat_id = '2층 ' ~ seat_number %}
                         <div class="seat {% if orders.get(seat_id) %}occupied{% endif %}">
                             {{ seat_id }}번
@@ -249,19 +239,7 @@
                     {% endfor %}
                 </div>
                 <div class="row">
-                    {% for seat_number in range(5, 9) %}
-                        {% set seat_id = '2층 ' ~ seat_number %}
-                        <div class="seat {% if orders.get(seat_id) %}occupied{% endif %}">
-                            {{ seat_id }}번
-                            {% for order in orders.get(seat_id, []) %}
-                                <div>{{ order.drink }}</div>
-                                <button class="delete-btn" onclick="deleteOrder('{{ order.id }}')">삭제</button>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="row">
-                    {% for seat_number in range(9, 13) %}
+                    {% for seat_number in range(7, 13) %}
                         {% set seat_id = '2층 ' ~ seat_number %}
                         <div class="seat {% if orders.get(seat_id) %}occupied{% endif %}">
                             {{ seat_id }}번
