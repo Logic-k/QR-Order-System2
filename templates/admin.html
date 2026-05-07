@@ -233,19 +233,7 @@
             <!-- 2층 -->
             <div id="floor2" class="floor-container">
                 <div class="row">
-                    {% for seat_number in range(1, 7) %}
-                        {% set seat_id = '2층 ' ~ seat_number %}
-                        <div class="seat {% if orders.get(seat_id) %}occupied{% endif %}">
-                            {{ seat_id }}번
-                            {% for order in orders.get(seat_id, []) %}
-                                <div>{{ order.drink }}</div>
-                                <button class="delete-btn" onclick="deleteOrder('{{ order.id }}')">삭제</button>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
-                </div>
-                <div class="row">
-                    {% for seat_number in range(7, 13) %}
+                    {% for seat_number in range(1, 13) %}
                         {% set seat_id = '2층 ' ~ seat_number %}
                         <div class="seat {% if orders.get(seat_id) %}occupied{% endif %}">
                             {{ seat_id }}번
