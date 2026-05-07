@@ -1,0 +1,120 @@
+<html>
+    <head>
+        <title>QR 주문</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                font-family: 'Noto Sans', sans-serif;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                text-align: center;
+                background-color: #FAF3E0;
+            }
+            .container {
+                background: white;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                max-width: 350px;
+                width: 90%;
+            }
+            select, button {
+                font-size: 18px;
+                padding: 10px;
+                margin: 10px 0;
+                width: 100%;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            .logo-container {
+                position: fixed; /* 화면 최상단 고정 */
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%); /* 가운데 정렬 */
+                width: 100%;
+                text-align: center;
+                padding: 10px 0;
+                z-index: 1000; /* 다른 요소보다 위에 위치 */
+            }
+            .logo {
+                width: 120px;  /* 로고 크기 조절 */
+                height: 120px;
+                border-radius: 50%; /* 원형 유지 */
+                object-fit: cover;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            table, th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+        <script>
+            function placeOrder() {
+                let drink = document.getElementById('drink').value;
+                fetch(window.location.href, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ drink: drink })
+                }).then(() => {
+                    window.location.href = "/order-complete?seat=" + '{{ seat_number }}';
+                });
+            }
+        </script>
+    </head>
+    <body>
+	<div class="logo-container">
+    		<img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
+	</div>
+	<div class="announcement">
+    		불편하신 점이 있다면 직원을 불러주세요😊<br/>
+    		(If you have any inconvenience, please call a staff member!)<br/>
+    		(如果有不便之处，请呼叫工作人员!)
+	</div>
+        <div class="container">
+           <h2>자리 {{ seat_number }}번 (Seat No. {{ seat_number }}) (座位 {{ seat_number }})</h2>
+
+            <label>음료 선택 (Drink Selection) (饮料选择):</label>
+            <select id="drink">
+    <option value="아메리카노(HOT)">아메리카노(Americano)(HOT) / 美式咖啡 (热)</option>
+    <option value="아메리카노(COLD)">아메리카노(Americano)(COLD) / 美式咖啡 (冰)</option>
+    <option value="캐모마일(HOT)">캐모마일(Chamomile)(HOT) / 洋甘菊茶 (热)</option>
+    <option value="캐모마일(COLD)">캐모마일(Chamomile)(COLD) / 洋甘菊茶 (冰)</option>
+    <option value="페퍼민트(HOT)">페퍼민트(peppermint)(HOT) / 薄荷茶 (热)</option>
+    <option value="페퍼민트(COLD)">페퍼민트(peppermint)(COLD) / 薄荷茶 (冰)</option>
+    <option value="루이보스(HOT)">루이보스(Rooibos)(HOT) / 南非红茶 (热)</option>
+    <option value="루이보스(COLD)">루이보스(Rooibos)(COLD) / 南非红茶 (冰)</option>
+    <option value="얼그레이(HOT)">얼그레이(Earlgray)(HOT) / 伯爵茶 (热)</option>
+    <option value="얼그레이(COLD)">얼그레이(Earlgray)(COLD) / 伯爵茶 (冰)</option>
+    <option value="핫초코(Only HOT)">핫초코(Hot chocolate)(Only HOT) / 热巧克力</option>
+    <option value="아이스티(Only ICE)">아이스티(Iced Tea)(Only ICE) / 冰茶</option>
+    <option value="사과주스(Only ICE)">사과주스(Apple Juice)(Only ICE) / 苹果汁</option>
+    <option value="오렌지주스(Only ICE)">오렌지주스(Orange Juice)(Only ICE) / 橙汁</option>
+</select><br/>
+            <button onclick="placeOrder()">주문하기 (Order Now)</button>
+        </div>
+	<div class="announcement">즐거운 시간 보내세요! (Enjoy your time!) (祝您玩得开心!)</div>
+    </body>
+</html>
