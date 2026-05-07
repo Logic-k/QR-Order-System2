@@ -94,7 +94,20 @@
     		(如果有不便之处，请呼叫工作人员!)
 	</div>
         <div class="container">
-           <h2>자리 {{ seat_number }}번 (Seat No. {{ seat_number }}) (座位 {{ seat_number }})</h2>
+           {% if '2층' in seat_number %}
+               {% set num = seat_number | replace('2층 ', '') | replace('2층', '') %}
+               <h2>
+                   자리 2층 {{ num }}번<br/>
+                   Seat No.{{ num }} of 2nd floor<br/>
+                   二楼{{ num }}号座位
+               </h2>
+           {% else %}
+               <h2>
+                   자리 1층 {{ seat_number }}번<br/>
+                   Seat No.{{ seat_number }} of 1st floor<br/>
+                   一楼{{ seat_number }}号座位
+               </h2>
+           {% endif %}
 
             <label>음료 선택 (Drink Selection) (饮料选择):</label>
             <select id="drink">

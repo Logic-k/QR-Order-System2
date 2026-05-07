@@ -83,15 +83,21 @@ def delete_order():
         return jsonify({"message": "주문이 삭제되었습니다."})
     return jsonify({"error": "유효한 주문 ID가 없습니다."}), 400
 
-# 모든 주문 삭제 API
-@app.route("/delete-all-orders", methods=["POST"])
-def delete_all_orders():
+# 층별 모든 주문 삭제 API
+@app.route("/delete-floor-orders", methods=["POST"])
+def delete_floor_orders():
+    floor = request.json.get("floor")
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM orders")
+    if floor == 1:
+        # 1층 좌석 삭제 (2층이 아닌 것)
+        cursor.execute("DELETE FROM orders WHERE seat NOT LIKE '2층%'")
+    elif floor == 2:
+        # 2층 좌석 삭제
+        cursor.execute("DELETE FROM orders WHERE seat LIKE '2층%'")
     conn.commit()
     conn.close()
-    return jsonify({"message": "모든 주문이 삭제되었습니다."})
+    return jsonify({"message": f"{floor}층 모든 주문이 삭제되었습니다."})
 
 #크롤러 허용 설정
 @app.route("/robots.txt")

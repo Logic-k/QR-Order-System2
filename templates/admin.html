@@ -133,10 +133,12 @@
                     body: JSON.stringify({ id: orderId })
                 }).then(() => location.reload());
             }
-            function deleteAllOrders() {
-                if (confirm('모든 주문을 정말 삭제하시겠습니까?')) {
-                    fetch('/delete-all-orders', {
-                        method: 'POST'
+            function deleteFloorOrders(floor) {
+                if (confirm(floor + '층의 모든 주문을 정말 삭제하시겠습니까?')) {
+                    fetch('/delete-floor-orders', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ floor: floor })
                     }).then(() => location.reload());
                 }
             }
@@ -160,6 +162,18 @@
                 location.reload();
             }, 30000); // 30초마다 새로고침
         </script>
+        <style>
+            @media(max-width: 600px) {  /* 📱 모바일 화면 (600px 이하) */
+                #refresh-button{
+                    font-size: 16px;
+                    padding: 10px 18px;
+                    top: 8px;
+                    right: 8px;
+                }
+            }
+        </style>
+    </head>
+    <body>
         <!--✅ 새로고침 버튼(우측 상단 고정) -->
         <button id="refresh-button" style="
             position: fixed;
@@ -178,25 +192,16 @@
             ">
             🔄 새로고침
         </button>
-
         <script>
-            // ✅ 버튼 클릭 시 새로고침 기능
+            // ✅ 버튼 클릭 시 시각적 피드백 및 새로고침 기능
             document.getElementById("refresh-button").addEventListener("click", function() {
-                location.reload();
+                this.innerHTML = "🔄 새로고침 중...";
+                this.style.transform = "scale(0.95)";
+                setTimeout(() => {
+                    location.reload();
+                }, 100);
             });
         </script>
-        <style>
-            @media(max-width: 600px) {  /* 📱 모바일 화면 (600px 이하) */
-                #refresh-button{
-                    font-size: 16px;
-                    padding: 10px 18px;
-                    top: 8px;
-                    right: 8px;
-                }
-            }
-        </style>
-    </head>
-    <body>
         <div class="logo-container">
             <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Logo">
         </div>
@@ -222,6 +227,7 @@
                         </div>
                     {% endfor %}
                 </div>
+                <button class="delete-all-btn" onclick="deleteFloorOrders(1)">1층 모든 주문 삭제</button>
             </div>
             
             <!-- 2층 -->
@@ -250,9 +256,8 @@
                         </div>
                     {% endfor %}
                 </div>
+                <button class="delete-all-btn" onclick="deleteFloorOrders(2)">2층 모든 주문 삭제</button>
             </div>
         </div>
-        
-        <button class="delete-all-btn" onclick="deleteAllOrders()">모든 주문 삭제</button>
     </body>
 </html>
